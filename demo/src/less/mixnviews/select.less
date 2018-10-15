@@ -1,0 +1,125 @@
+﻿//搜索view
+.select(@select-w;@select-h;@select-btn-w;@isborder) {
+  .select {
+    position: relative;
+    z-index: 10;
+    display: inline-block;
+    width: @select-w;
+    height: @select-h;
+    border: 1px solid #ccc;
+    background: #fff;
+    vertical-align: middle;
+    font-size: 14px;
+    background: #fff;
+    &:hover {
+      background: #f5f5f5;
+    }
+    .reveal {
+      margin-right: -5px;
+      > span, > i {
+        display: inline-block;
+        height: @select-h;
+        line-height: @select-h;
+        cursor: default;
+        float: left;
+      }
+
+      > span {
+        width: (@select-w - @select-btn-w - 10px);
+        text-align: left;
+        color: #666;
+        padding: 0 5px;
+        .text-overflow();
+      }
+
+      > i {
+        display: block;
+        width: @select-btn-w;
+        position: relative;
+        display: inline-block;
+        font-family: 'Glyphicons Halflings';
+        font-size: 12px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: #bfbdc0;
+        text-align: center;
+
+        & when (@isborder=true) {
+          border-left: 1px solid #ccc;
+        }
+
+        &:hover {
+          background: #f1f1f1;
+        }
+
+        &:before {
+          content: "\e252";
+        }
+      }
+    }
+
+    .option-list {
+      display: none;
+      position: absolute;
+      left: -1px;
+      top: @select-h;
+      max-height: 225px;
+      overflow-y: auto;
+      width: @select-w;
+      border: 1px solid #ccc;
+      background: #fff;
+
+      li {
+        height: 30px;
+        border: 1px solid #fff;
+        border-left: none;
+        border-right: none;
+        padding: 0px 5px;
+        line-height: 30px;
+        cursor: default;
+
+        &:hover {
+          background: #eee;
+          border: 1px solid #ccc;
+          border-left: none;
+          border-right: none;
+        }
+        &.option {
+          background: #eee;
+          border: 1px solid #ccc;
+          border-left: none;
+          border-right: none;
+        }
+      }
+    }
+  }
+}
+
+.select-update(@select-w;@select-h;@select-btn-w;@isborder) {
+  .select {
+    width: @select-w + 2px;
+    height: @select-h + 2px;
+    .reveal {
+      > span, > i {
+        height: @select-h;
+        line-height: @select-h;
+      }
+      > span {
+        width: (@select-w - @select-btn-w - 10px);
+      }
+      > i {
+        width: @select-btn-w;
+        & when (@isborder=true) {
+          border-left: 1px solid #ccc;
+        }
+        & when (@isborder=false) {
+          border-left: none !important;
+        }
+      }
+    }
+    .option-list {
+      top: @select-h;
+      width: @select-w + 2px;
+    }
+  }
+}
