@@ -15,13 +15,83 @@
             </div>
         </div>
     </div>
-    <transition name="fade">
+    <p ref="refInfo" style="top:100px;position:absolute;z-index:10000;font-size:36px;">hello</p>
+    <transition name="fade" :duration="1000"
+     v-on:before-enter="beforeEnter" 
+     v-on:enter="enter"
+     v-on:after-enter="afterEnter"
+     v-on:enter-cancelled="enterCancelled">
         <p style="position:absolute;z-index:10000;font-size:36px;" v-if="show">hello</p>
     </transition>
 </div>
 </template>
 
 <script>
+let inBrowser = true;
+let raf = inBrowser ?
+    window.requestAnimationFrame ?
+    window.requestAnimationFrame.bind(window) :
+    setTimeout :
+    /* istanbul ignore next */
+    function (fn) {
+        return fn();
+    };
+
+function addClass(el, cls) {
+    /* istanbul ignore if */
+    if (!cls || !(cls = cls.trim())) {
+        return;
+    }
+
+    /* istanbul ignore else */
+    if (el.classList) {
+        if (cls.indexOf(" ") > -1) {
+            cls.split(/\s+/).forEach(function (c) {
+                return el.classList.add(c);
+            });
+        } else {
+            el.classList.add(cls);
+        }
+    } else {
+        var cur = " " + (el.getAttribute("class") || "") + " ";
+        if (cur.indexOf(" " + cls + " ") < 0) {
+            el.setAttribute("class", (cur + cls).trim());
+        }
+    }
+}
+
+function removeClass(el, cls) {
+    /* istanbul ignore if */
+    if (!cls || !(cls = cls.trim())) {
+        return;
+    }
+
+    /* istanbul ignore else */
+    if (el.classList) {
+        if (cls.indexOf(" ") > -1) {
+            cls.split(/\s+/).forEach(function (c) {
+                return el.classList.remove(c);
+            });
+        } else {
+            el.classList.remove(cls);
+        }
+        if (!el.classList.length) {
+            el.removeAttribute("class");
+        }
+    } else {
+        var cur = " " + (el.getAttribute("class") || "") + " ";
+        var tar = " " + cls + " ";
+        while (cur.indexOf(tar) >= 0) {
+            cur = cur.replace(tar, " ");
+        }
+        cur = cur.trim();
+        if (cur) {
+            el.setAttribute("class", cur);
+        } else {
+            el.removeAttribute("class");
+        }
+    }
+}
 export default {
     props: {
         title: "String",
@@ -35,13 +105,56 @@ export default {
     },
     methods: {
         closeed() {
+            let refs = this.$refs;
+            console.log(refs);
+            let el = refs.refInfo;
             if (this.show) {
                 this.show = false;
+                 el.style.display = "none";
+                removeClass(el, "fade-enter");
+                removeClass(el, "fade-enter-to");
+                removeClass(el, "fade-enter-active");
             } else {
                 this.show = true;
+                 el.style.display = "block";
+                addClass(el, "fade-enter");
+                addClass(el, "fade-enter-active");
+                raf(function () {
+                  raf(function () {
+                        removeClass(el, "fade-enter");
+                        addClass(el, "fade-enter-to");
+                        let onend = function () {
+                            console.log("执行完毕！");
+                            removeClass(el, "fade-enter-to");
+                            removeClass(el, "fade-enter-active");
+                            el.removeEventListener("transitionend", onend);
+                        }
+                        el.addEventListener("transitionend", onend);
+                    });
+                });
+                  
+               
             }
 
-            console.log(this);
+            // console.log(this);
+        },
+        beforeEnter(el){
+            console.log(el);
+        },
+        enter(el,done){
+            console.log(el);
+             console.log(done);
+            // alert('enter');
+            setTimeout(function(){
+                done();
+            },2000);
+            
+        },
+        afterEnter(el){
+            console.log('完成');
+        },
+        enterCancelled(){
+             console.log('取消');
         }
     }
 };
@@ -193,14 +306,16 @@ export default {
 
 .fade-enter {
     opacity: 0;
+    font-size: 45px !important;
 }
 
 .fade-enter-active {
-    transition: opacity .5s;
+    transition: all 2s;
 }
 
 .fade-enter-to {
     opacity: 1;
+    font-size: 90px !important;
 }
 
 .fade-leave {}
