@@ -1,5 +1,5 @@
 <template>
-<div>
+<div v-show="isShow">
     <div class="payment-info J_PaymentInfo">
         <div class="mask"></div>
         <div class="bem-dialog bem-dialog_color-blue_shadow">
@@ -11,7 +11,7 @@
             <div class="bem-dialog__content">{{mycontent||'默认内容'}}
             </div>
             <div class="bem-dialog__footer">
-<button @click="closeed" class="bem-btn bem-btn_color-blue_shadow">我知道了</button>
+<button @click="closeed" class="bem-btn bem-btn_color-blue_shadow" >我知道了</button>
             </div>
         </div>
     </div>
@@ -94,6 +94,10 @@ function removeClass(el, cls) {
 }
 export default {
   props: {
+    isShow: {
+      default: false,
+      type: Boolean
+    },
     mytitle: String,
     mycontent: String
   },
@@ -105,9 +109,11 @@ export default {
   },
   beforeMount() {
     console.log(this);
+    console.log(this.$listeners);
   },
   methods: {
     closeed() {
+      this.$emit("my-event", "abc", { name: "江湖小白" });
       let refs = this.$refs;
       console.log(refs);
       let el = refs.refInfo;
@@ -150,6 +156,14 @@ export default {
     },
     enterCancelled() {
       console.log("取消");
+    }
+  },
+  directives: {
+    focus: {
+      // 指令的定义
+      inserted: function(el) {
+        el.focus();
+      }
     }
   }
 };

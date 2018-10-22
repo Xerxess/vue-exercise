@@ -78,13 +78,14 @@ export default {
       this.message = "我修改了值";
       console.log(this.message);
     }
-  }
-  // beforeCreate: function () {
-  //     console.group('------beforeCreate创建前状态------');
-  //     console.log("%c%s", "color:red", "el     : " + this.$el); //undefined
-  //     console.log("%c%s", "color:red", "data   : " + this.$data); //undefined
-  //     console.log("%c%s", "color:red", "message: " + this.message)
-  // },
+  },
+  beforeCreate: function () {
+      console.group('------beforeCreate创建前状态------');
+      console.log("%c%s", "color:red", "el     : " + this.$el); //undefined
+      console.log("%c%s", "color:red", "data   : " + this.$data); //undefined
+      console.log("%c%s", "color:red", "message: " + this.message)
+      console.log("%c%s", "color:red", "message: " + this.$style)
+  },
   // created: function () {
   //     console.group('------created创建完毕状态------');
   //     console.log("%c%s", "color:red", "el     : " + this.$el); //undefined
