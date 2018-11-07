@@ -4,20 +4,34 @@
   {{countAlias}}<br>
   {{countPlusLocalState}}<br>
   {{mygetter}}
+    <my-pagination name="Pagination" :records="10000" v-model="page" :per-page="100" @paginate="myCallback"></my-pagination>
+    <my-dialog></my-dialog>
   <router-view></router-view>
   {{info|filter1|filter2|filter3('first','second')}}
+
 </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import Pagination from 'vue-pagination-2';
+import MyDialog from "./components/Dialog.vue";
+import bootstrap from 'bootstrap';
+import '../node_modules/bootstrap/dist/js/bootstrap.bundle.js';
+import '../node_modules/bootstrap/dist/css/bootstrap.css';
+console.log(MyDialog);
 export default {
   data() {
     return {
-      info:'myName',
-      test:'test',
-      localCount: 99
+      info: "myName",
+      test: "test",
+      localCount: 99,
+      page:10
     };
+  },
+   components: {
+    MyDialog,
+    'my-pagination':Pagination
   },
   computed: {
     mygetter() {
@@ -52,7 +66,13 @@ export default {
       console.log(arg);
       return "filter3";
     }
+  },
+  methods:{
+    myCallback(){
+      console.log('分页点击');
+    }
   }
+  
 };
 </script>
 
